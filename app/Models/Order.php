@@ -20,16 +20,13 @@ class Order extends Model
 
     protected $fillable = [
         'user_id',
-        'order_date',
         'status',
-        'total_price',
-        'shipping_address',
         'total_amount',
+        'shipping_address',
     ];
 
     protected $casts = [
-        'order_date' => 'date',
-        'total_price' => 'decimal:2'
+        'total_amount' => 'decimal:2'
     ];
 
     // Status list for dropdown
@@ -75,20 +72,17 @@ class Order extends Model
         return $this->hasOne(Payment::class);
     }
 
-    public function product()
-    {
-        return $this->belongsTo(Product::class);
-    }
+
 
     // Accessors
     public function getFormattedTotalAttribute(): string
     {
-        return 'Rp ' . number_format($this->total_price, 0, ',', '.');
+        return 'Rp ' . number_format($this->total_amount, 0, ',', '.');
     }
 
     public function getFormattedDateAttribute(): string
     {
-        return $this->order_date->format('d/m/Y');
+        return $this->created_at->format('d/m/Y');
     }
 
     public function getStatusBadgeAttribute(): string
@@ -111,7 +105,7 @@ class Order extends Model
     public function updateTotal(): void
     {
         $this->update([
-            'total_price' => $this->calculateTotal()
+            'total_amount' => $this->calculateTotal()
         ]);
     }
 

@@ -36,22 +36,37 @@
             <div class="collapse navbar-collapse" id="navbarUser">
                 <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-lg-2">
                     <li class="nav-item">
-                        <a class="nav-link @if(request()->is('dashboard-user')) active @endif" href="{{ route('dashboard.user') }}"><i class="fas fa-home me-1"></i>Beranda</a>
+                        <a class="nav-link @if(request()->is('dashboard-user') || request()->is('/')) active @endif" href="{{ Auth::check() ? route('dashboard.user') : url('/') }}"><i class="fas fa-home me-1"></i>Beranda</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link @if(request()->is('produk*')) active @endif" href="{{ route('produk.user') }}"><i class="fas fa-box-open me-1"></i>Produk</a>
                     </li>
+                    @auth
                     <li class="nav-item">
                         <a class="nav-link @if(request()->is('profil*')) active @endif" href="{{ route('profil.user') }}"><i class="fas fa-user me-1"></i>Profil</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link @if(request()->is('cart*')) active @endif" href="{{ route('cart.index') }}">
+                            <i class="fas fa-shopping-cart me-1"></i>Keranjang
+                            @if(\App\Models\Cart::where('user_id', Auth::id())->count() > 0)
+                                <span class="badge bg-danger rounded-pill">{{ \App\Models\Cart::where('user_id', Auth::id())->count() }}</span>
+                            @endif
+                        </a>
+                    </li>
+                    @endauth
                 </ul>
                 <div class="d-flex align-items-center gap-2 ms-lg-3 mt-3 mt-lg-0">
-                    <span class="user-avatar"><i class="fas fa-user"></i></span>
-                    <span class="text-white small d-none d-lg-inline">Pengguna</span>
-                    <form action="{{ route('logout') }}" method="POST" class="d-inline">
-                        @csrf
-                        <button type="submit" class="btn btn-logout-user btn-sm ms-2">Logout</button>
-                    </form>
+                    @auth
+                        <span class="user-avatar"><i class="fas fa-user"></i></span>
+                        <span class="text-white small d-none d-lg-inline">{{ Auth::user()->name }}</span>
+                        <form action="{{ route('logout') }}" method="POST" class="d-inline">
+                            @csrf
+                            <button type="submit" class="btn btn-logout-user btn-sm ms-2">Logout</button>
+                        </form>
+                    @else
+                        <a href="{{ route('login') }}" class="btn btn-outline-light btn-sm px-3 fw-bold">Login</a>
+                        <a href="{{ route('register') }}" class="btn btn-danger btn-sm px-3 fw-bold">Daftar</a>
+                    @endauth
                 </div>
             </div>
         </div>

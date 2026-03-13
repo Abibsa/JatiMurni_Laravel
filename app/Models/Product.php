@@ -27,6 +27,38 @@ class Product extends Model
         return $this->belongsTo(Category::class);
     }
 
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    public function images()
+    {
+        return $this->hasMany(ProductImage::class)->orderBy('sort_order');
+    }
+
+    public function getAverageRatingAttribute()
+    {
+        return $this->reviews()->avg('rating') ?? 0;
+    }
+
+    public function getReviewCountAttribute()
+    {
+        return $this->reviews()->count();
+    }
+
+    public function getReviewsDataAttribute()
+    {
+        return $this->reviews->load('user')->map(function($r) {
+            return [
+                'user' => $r->user->name ?? 'Anonim',
+                'rating' => $r->rating,
+                'comment' => $r->comment,
+                'date' => $r->created_at->format('d M Y')
+            ];
+        });
+    }
+
     public function getImageUrlAttribute()
     {
         if (!$this->image) {

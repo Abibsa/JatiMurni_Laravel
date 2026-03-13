@@ -110,6 +110,28 @@
                                 <span class="input-group-text bg-white border-end-0"><i class="fas fa-align-left"></i></span>
                                 <textarea name="description" class="form-control form-control-modern border-start-0" rows="2" placeholder="Deskripsi">{{ $product->description }}</textarea>
                             </div>
+                            {{-- Galeri Foto --}}
+                            <div class="mb-3">
+                                <label class="form-label fw-bold"><i class="fas fa-images text-danger me-1"></i> Foto Galeri Tambahan (Maks 5)</label>
+                                <input type="file" name="gallery_images[]" class="form-control" multiple accept="image/*">
+                                <small class="text-muted">Unggah beberapa foto sekaligus untuk galeri produk.</small>
+                            </div>
+                            @if($product->images->count() > 0)
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold small">Galeri Saat Ini:</label>
+                                <div class="d-flex flex-wrap gap-2">
+                                    @foreach($product->images as $galleryImg)
+                                        <div class="position-relative" style="width:70px; height:70px;">
+                                            <img src="{{ asset('storage/' . $galleryImg->image_path) }}" class="rounded border" style="width:70px; height:70px; object-fit:cover;">
+                                            <label class="position-absolute top-0 end-0" title="Centang untuk hapus">
+                                                <input type="checkbox" name="delete_gallery[]" value="{{ $galleryImg->id }}" class="form-check-input" style="width:18px;height:18px;">
+                                            </label>
+                                        </div>
+                                    @endforeach
+                                </div>
+                                <small class="text-muted">Centang foto yang ingin dihapus.</small>
+                            </div>
+                            @endif
                         </div>
                         <div class="modal-footer flex-column border-0 gap-2 p-4">
                             <button type="submit" class="btn btn-danger btn-lg btn-modal-action w-100">Simpan</button>
@@ -134,6 +156,13 @@
                         <div class="row">
                             <div class="col-md-5 text-center mb-3 mb-md-0">
                                 <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('public/images/default-product.jpg') }}" class="img-fluid rounded-4 shadow" style="max-height:300px;object-fit:cover;">
+                                @if($product->images->count() > 0)
+                                <div class="d-flex flex-wrap gap-2 mt-3 justify-content-center">
+                                    @foreach($product->images as $galleryImg)
+                                        <img src="{{ asset('storage/' . $galleryImg->image_path) }}" class="rounded border shadow-sm" style="width:60px; height:60px; object-fit:cover; cursor:pointer;" onclick="this.closest('.col-md-5').querySelector('img.img-fluid').src = this.src">
+                                    @endforeach
+                                </div>
+                                @endif
                             </div>
                             <div class="col-md-7">
                                 <h5 class="fw-bold mb-2 text-danger">Rp {{ number_format($product->price,0,',','.') }}</h5>
@@ -206,6 +235,12 @@
                         <div class="mb-3 input-group">
                             <span class="input-group-text bg-white border-end-0"><i class="fas fa-align-left"></i></span>
                             <textarea name="description" class="form-control form-control-modern border-start-0" rows="2" placeholder="Deskripsi"></textarea>
+                        </div>
+                        {{-- Galeri Foto --}}
+                        <div class="mb-3">
+                            <label class="form-label fw-bold"><i class="fas fa-images text-danger me-1"></i> Foto Galeri Tambahan (Maks 5)</label>
+                            <input type="file" name="gallery_images[]" class="form-control" multiple accept="image/*">
+                            <small class="text-muted">Unggah beberapa foto sekaligus untuk galeri produk.</small>
                         </div>
                     </div>
                     <div class="modal-footer flex-column border-0 gap-2 p-4">

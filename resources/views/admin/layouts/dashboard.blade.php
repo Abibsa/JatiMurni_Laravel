@@ -198,6 +198,11 @@
                     </a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link {{ request()->is('admin/pesanan*') ? 'active' : '' }}" href="{{ route('admin.orders.index') }}">
+                        <i class="fas fa-shopping-cart"></i> Pesanan
+                    </a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link {{ request()->is('pengguna') ? 'active' : '' }}" href="{{ route('pengguna.index') }}">
                         <i class="fas fa-users"></i> Pengguna
                     </a>
